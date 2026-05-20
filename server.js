@@ -1,4 +1,4 @@
-// Load .env file if it exists
+﻿// Load .env file if it exists
 try { require("dotenv").config(); } catch(e) { /* dotenv optional */ }
 
 const express = require("express");
@@ -20,7 +20,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static("public"));
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function slugify(value) {
   return String(value || "")
@@ -76,7 +76,7 @@ function normalizeProductPayload(payload) {
   };
 }
 
-// ─── Schemas ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Schemas â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 // Price history entry
 const priceHistorySchema = new mongoose.Schema({
@@ -133,7 +133,7 @@ const Blog = mongoose.model("Blog", blogSchema);
 const ChatLog = mongoose.model("ChatLog", chatLogSchema);
 
 
-// ─── Seed Data ────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Seed Data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 async function ensureAdminUser() {
   const existingAdmin = await User.findOne({ email: ADMIN_EMAIL });
@@ -250,7 +250,7 @@ mongoose.connect(MONGO_URI)
   })
   .catch((error) => { console.error("MongoDB connection error:", error.message); });
 
-// ─── Auth Routes ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ Auth Routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app.get("/health", (req, res) => res.json({ ok: true }));
 app.get("/auth/me", authRequired, (req, res) => res.json({ user: req.session }));
@@ -280,7 +280,7 @@ app.post("/login", async (req, res) => {
   } catch { res.status(400).json({ message: "Login failed" }); }
 });
 
-// ─── Product Routes ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Product Routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app.get("/products", async (req, res) => {
   try {
@@ -332,7 +332,7 @@ app.get("/product/:id", async (req, res) => {
   } catch { res.status(400).json({ message: "Invalid product id" }); }
 });
 
-// ── Add product (with stock + category + price history) ──
+// â”€â”€ Add product (with stock + category + price history) â”€â”€
 app.post("/addProduct", adminRequired, async (req, res) => {
   try {
     const payload = normalizeProductPayload(req.body);
@@ -346,7 +346,7 @@ app.post("/addProduct", adminRequired, async (req, res) => {
   } catch { res.status(400).json({ message: "Failed to add product" }); }
 });
 
-// ── Update product (auto-track price change) ──
+// â”€â”€ Update product (auto-track price change) â”€â”€
 app.put("/updateProduct/:id", adminRequired, async (req, res) => {
   try {
     const payload = normalizeProductPayload(req.body);
@@ -378,7 +378,7 @@ app.put("/publishProduct/:id", adminRequired, async (req, res) => {
   } catch { res.status(400).json({ message: "Failed to publish product" }); }
 });
 
-// ── NEW: Update stock quantity ──
+// â”€â”€ NEW: Update stock quantity â”€â”€
 app.put("/admin/products/:id/stock", adminRequired, async (req, res) => {
   try {
     const stockQuantity = Number(req.body.stockQuantity);
@@ -395,7 +395,7 @@ app.put("/admin/products/:id/stock", adminRequired, async (req, res) => {
   } catch { res.status(400).json({ message: "Failed to update stock" }); }
 });
 
-// ── NEW: Get price history for one product ──
+// â”€â”€ NEW: Get price history for one product â”€â”€
 app.get("/admin/products/:id/price-history", adminRequired, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id, "name price priceHistory category");
@@ -412,7 +412,7 @@ app.delete("/deleteProduct/:id", adminRequired, async (req, res) => {
   } catch { res.status(400).json({ message: "Failed to delete product" }); }
 });
 
-// ─── Order Routes ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Order Routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app.post("/order", authRequired, async (req, res) => {
   try {
@@ -461,7 +461,7 @@ app.put("/orders/:id/status", adminRequired, async (req, res) => {
   } catch { res.status(400).json({ message: "Failed to update order" }); }
 });
 
-// ─── AI Content Endpoints ─────────────────────────────────────────────────────
+// â”€â”€â”€ AI Content Endpoints â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 app.post("/ai/analytics-summary", adminRequired, async (req, res) => {
   try {
@@ -473,7 +473,7 @@ app.post("/ai/analytics-summary", adminRequired, async (req, res) => {
 app.post("/ai/analytics-recommendations", adminRequired, async (req, res) => {
   try {
     res.json(generateAnalyticsRecommendations(req.body.topProducts, req.body.highPerf, req.body.lowPerf));
-  } catch { res.json([{ icon: "🚀", text: "Focus on promotion" }]); }
+  } catch { res.json([{ icon: "ðŸš€", text: "Focus on promotion" }]); }
 });
 
 app.post("/ai/generate-product-content", adminRequired, async (req, res) => {
@@ -487,7 +487,7 @@ app.post("/ai/generate-product-content", adminRequired, async (req, res) => {
   } catch { res.status(500).json({ message: "Generation failed" }); }
 });
 
-// ─── AI Price Drop Suggestion ─────────────────────────────────────────────────
+// â”€â”€â”€ AI Price Drop Suggestion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Analyzes price history and sales to suggest whether to drop price
 app.get("/ai/price-analysis", adminRequired, async (req, res) => {
   try {
@@ -565,7 +565,7 @@ app.get("/ai/price-analysis", adminRequired, async (req, res) => {
   } catch (e) { res.status(500).json({ message: "Price analysis failed" }); }
 });
 
-// ─── Main Analytics Endpoint (enhanced) ──────────────────────────────────────
+// â”€â”€â”€ Main Analytics Endpoint (enhanced) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 app.get("/admin/analytics", adminRequired, async (req, res) => {
   try {
     const [allOrders, allProducts, allUsers] = await Promise.all([Order.find().lean(), Product.find().lean(), User.find().lean()]);
@@ -628,7 +628,7 @@ app.get("/admin/analytics", adminRequired, async (req, res) => {
     const publishedCount = allProducts.filter(p => p.status !== "draft").length;
     const draftCount = allProducts.filter(p => p.status === "draft").length;
 
-    // ── NEW: Real inventory alerts ──
+    // â”€â”€ NEW: Real inventory alerts â”€â”€
     const inventoryAlerts = allProducts.map(p => {
       const stock = p.stockQuantity || 0;
       const threshold = p.lowStockThreshold || 5;
@@ -638,7 +638,7 @@ app.get("/admin/analytics", adminRequired, async (req, res) => {
       return { id: String(p._id), name: p.name, category: p.category, stockQuantity: stock, lowStockThreshold: threshold, alertType };
     }).filter(p => p.alertType !== null);
 
-    // ── NEW: Category-wise sales aggregation ──
+    // â”€â”€ NEW: Category-wise sales aggregation â”€â”€
     const categoryMap = {};
     allOrders.forEach(order => {
       (order.products || []).forEach(item => {
@@ -656,7 +656,7 @@ app.get("/admin/analytics", adminRequired, async (req, res) => {
       .sort((a, b) => b.quantity - a.quantity)
       .map(c => ({ ...c, revenue: Math.round(c.revenue * 100) / 100 }));
 
-    // ── NEW: Category forecast (next 30 days estimate based on trend) ──
+    // â”€â”€ NEW: Category forecast (next 30 days estimate based on trend) â”€â”€
     // Group last 60 days vs previous 60 days per category
     const now = new Date();
     const d30 = new Date(now - 30 * 24 * 60 * 60 * 1000);
@@ -695,7 +695,7 @@ app.get("/admin/analytics", adminRequired, async (req, res) => {
       };
     }).sort((a, b) => b.forecastNext30 - a.forecastNext30);
 
-    // ── NEW: Price history summary (top 5 products with most price changes) ──
+    // â”€â”€ NEW: Price history summary (top 5 products with most price changes) â”€â”€
     const priceChangeSummary = allProducts
       .filter(p => (p.priceHistory || []).length >= 2)
       .map(p => {
@@ -805,18 +805,12 @@ app.post("/reset-password", async (req, res) => {
   }
 });
 
-// BLOG APIs
-app.get('/api/blogs', async(req,res)=>{const page=parseInt(req.query.page)||1;const limit=parseInt(req.query.limit)||9;const q={status:'published'};if(req.query.category)q.category=req.query.category;const blogs=await Blog.find(q).sort({createdAt:-1}).skip((page-1)*limit).limit(limit);const total=await Blog.countDocuments(q);res.json({blogs,pages:Math.ceil(total/limit)});});
-app.get('/api/blogs/:slug', async(req,res)=>{const b=await Blog.findOne({slug:req.params.slug});if(!b)return res.status(404).json({message:'Not found'});b.views+=1;await b.save();res.json(b);});
-app.get('/api/admin/blogs', auth, async(req,res)=>{res.json(await Blog.find().sort({createdAt:-1}));});
-app.post('/api/admin/blogs', auth, async(req,res)=>{const body=req.body;body.slug=(body.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-');res.json(await Blog.create(body));});
-app.put('/api/admin/blogs/:id', auth, async(req,res)=>{if(req.body.title)req.body.slug=req.body.title.toLowerCase().replace(/[^a-z0-9]+/g,'-');res.json(await Blog.findByIdAndUpdate(req.params.id,req.body,{new:true}));});
-app.delete('/api/admin/blogs/:id', auth, async(req,res)=>{await Blog.findByIdAndDelete(req.params.id);res.json({message:'Deleted'});});
-// Chat logs
+// BLOG APIs removed by request\n// Chat logs
 app.post('/api/chatlog', async(req,res)=>{res.json(await ChatLog.create(req.body));});
 app.get('/api/admin/chatlogs', auth, async(req,res)=>{res.json(await ChatLog.find().sort({createdAt:-1}).limit(200));});
 
 app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
+
 
 
 
