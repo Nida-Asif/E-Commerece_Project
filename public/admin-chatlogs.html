@@ -1,0 +1,3 @@
+<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Chat Logs</title><link rel='stylesheet' href='style.css'></head><body><div style='padding:30px'><h1>Chat Logs</h1><div id='logs'>Loading...</div></div><script>
+async function load(){const token=localStorage.getItem('authToken');const r=await fetch('/api/admin/chatlogs',{headers:{'x-auth-token':token}});const d=await r.json();document.getElementById('logs').innerHTML=d.map(l=>`<div style="border:1px solid #ccc;padding:10px;margin:10px"><b>User:</b>${l.userMessage}<br><b>Bot:</b>${l.botReply}<br><small>${new Date(l.createdAt).toLocaleString()}</small></div>`).join('');}load();
+</script></body></html>

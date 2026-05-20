@@ -56,6 +56,8 @@ function adminRequired(req, res, next) {
   req.session = session; req.token = token; next();
 }
 
+const auth = authRequired;
+
 function normalizeProductPayload(payload) {
   const name = String(payload.name || "").trim();
   const description = String(payload.description || "").trim();
@@ -124,6 +126,12 @@ const orderSchema = new mongoose.Schema({
 const Product = mongoose.model("Product", productSchema);
 const User = mongoose.model("User", userSchema);
 const Order = mongoose.model("Order", orderSchema);
+
+const blogSchema = new mongoose.Schema({title:String,slug:String,excerpt:String,content:String,category:String,status:{type:String,default:"draft"},coverImage:String,author:String,tags:[String],seoTitle:String,metaDesc:String,views:{type:Number,default:0}},{timestamps:true});
+const chatLogSchema = new mongoose.Schema({userMessage:String,botReply:String},{timestamps:true});
+const Blog = mongoose.model("Blog", blogSchema);
+const ChatLog = mongoose.model("ChatLog", chatLogSchema);
+
 
 // ─── Seed Data ────────────────────────────────────────────────────────────────
 
@@ -796,7 +804,20 @@ app.post("/reset-password", async (req, res) => {
     res.status(500).json({ message: "Failed to reset password" });
   }
 });
+
+// BLOG APIs
+app.get('/api/blogs', async(req,res)=>{const page=parseInt(req.query.page)||1;const limit=parseInt(req.query.limit)||9;const q={status:'published'};if(req.query.category)q.category=req.query.category;const blogs=await Blog.find(q).sort({createdAt:-1}).skip((page-1)*limit).limit(limit);const total=await Blog.countDocuments(q);res.json({blogs,pages:Math.ceil(total/limit)});});
+app.get('/api/blogs/:slug', async(req,res)=>{const b=await Blog.findOne({slug:req.params.slug});if(!b)return res.status(404).json({message:'Not found'});b.views+=1;await b.save();res.json(b);});
+app.get('/api/admin/blogs', auth, async(req,res)=>{res.json(await Blog.find().sort({createdAt:-1}));});
+app.post('/api/admin/blogs', auth, async(req,res)=>{const body=req.body;body.slug=(body.title||'').toLowerCase().replace(/[^a-z0-9]+/g,'-');res.json(await Blog.create(body));});
+app.put('/api/admin/blogs/:id', auth, async(req,res)=>{if(req.body.title)req.body.slug=req.body.title.toLowerCase().replace(/[^a-z0-9]+/g,'-');res.json(await Blog.findByIdAndUpdate(req.params.id,req.body,{new:true}));});
+app.delete('/api/admin/blogs/:id', auth, async(req,res)=>{await Blog.findByIdAndDelete(req.params.id);res.json({message:'Deleted'});});
+// Chat logs
+app.post('/api/chatlog', async(req,res)=>{res.json(await ChatLog.create(req.body));});
+app.get('/api/admin/chatlogs', auth, async(req,res)=>{res.json(await ChatLog.find().sort({createdAt:-1}).limit(200));});
+
 app.listen(PORT, () => { console.log(`Server running on port ${PORT}`); });
+
 
 
 
