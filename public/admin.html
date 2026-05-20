@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +6,7 @@
   <title>Admin - IT Accessories Marketplace</title>
   <link rel="stylesheet" href="style.css?v=5">
   <style>
-    /* ── AI Generate Button ── */
+    /* â”€â”€ AI Generate Button â”€â”€ */
     .ai-generate-btn {
       display: inline-flex;
       align-items: center;
@@ -34,7 +34,7 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── AI hint row ── */
+    /* â”€â”€ AI hint row â”€â”€ */
     .ai-hint-row {
       display: flex;
       align-items: center;
@@ -49,7 +49,7 @@
     }
     .ai-hint-row .ai-icon { font-size: 1.3rem; }
 
-    /* ── Draft/Publish action row ── */
+    /* â”€â”€ Draft/Publish action row â”€â”€ */
     .form-action-row {
       display: flex;
       flex-wrap: wrap;
@@ -70,7 +70,7 @@
     }
     .draft-btn:hover { background: #e5e7eb; }
 
-    /* ── Status pill for drafts ── */
+    /* â”€â”€ Status pill for drafts â”€â”€ */
     .pill-draft {
       background: #fef3c7;
       color: #92400e;
@@ -104,7 +104,7 @@
     }
     .publish-inline-btn:hover { opacity: 0.85; }
 
-    /* ── Analytics nav highlight ── */
+    /* â”€â”€ Analytics nav highlight â”€â”€ */
     .analytics-nav-link {
       background: linear-gradient(135deg,#6366f1,#8b5cf6);
       color: #fff !important;
@@ -127,7 +127,7 @@
         <li><a href="wishlist.html">Wishlist</a></li>
         <li><a href="cart.html">Cart</a></li>
         <li><a href="orders.html">Orders</a></li>
-        <li><a href="ai-analytics.html" class="analytics-nav-link">✨ AI Analytics</a></li>
+        <li><a href="ai-analytics.html" class="analytics-nav-link">âœ¨ AI Analytics</a></li>
         <li id="auth-nav-link"><a href="login.html">Login</a></li>
       </ul>
     </nav>
@@ -162,19 +162,19 @@
       </div>
     </section>
 
-    <!-- ── Add / Edit Product Form ── -->
+    <!-- â”€â”€ Add / Edit Product Form â”€â”€ -->
     <section class="detail-card admin-panel-card admin-form-panel">
       <div class="section-title-row">
         <div>
           <h3 id="admin-form-title">Add Product</h3>
-          <p class="muted-text">Fill in Name and Description, then hit <strong>✨ Generate AI Content</strong> to auto-fill the rest.</p>
+          <p class="muted-text">Fill in Name and Description, then hit <strong>âœ¨ Generate AI Content</strong> to auto-fill the rest.</p>
         </div>
       </div>
 
       <!-- AI hint -->
       <div class="ai-hint-row">
-        <span class="ai-icon">✨</span>
-        <span>Type the <strong>Product Name</strong> and a short <strong>Description</strong>, then click Generate AI Content — SEO title, meta tags, and keywords will be filled automatically.</span>
+        <span class="ai-icon">âœ¨</span>
+        <span>Type the <strong>Product Name</strong> and a short <strong>Description</strong>, then click Generate AI Content â€” SEO title, meta tags, and keywords will be filled automatically.</span>
       </div>
 
       <form id="admin-add-form" class="admin-form admin-form-grid">
@@ -184,9 +184,9 @@
         <input id="admin-price" type="number" min="1" step="0.01" placeholder="Price *" required>
         <input id="admin-image" type="text" placeholder="Image Path (e.g. images/mouse.jpg)" required>
 
-        <textarea id="admin-description" placeholder="Description — briefly describe what this product is and who it's for *" rows="3"></textarea>
+        <textarea id="admin-description" placeholder="Description â€” briefly describe what this product is and who it's for *" rows="3"></textarea>
 
-        <!-- ── NEW: Inventory & Category Fields ── -->
+        <!-- â”€â”€ NEW: Inventory & Category Fields â”€â”€ -->
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
           <select id="admin-category" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem">
             <option value="">Category</option>
@@ -208,13 +208,13 @@
 
         <!-- AI Generate Button -->
         <button type="button" class="ai-generate-btn" id="ai-generate-btn">
-          <span class="btn-icon">✨</span>
+          <span class="btn-icon">âœ¨</span>
           <span id="ai-btn-label">Generate AI Content</span>
         </button>
 
         <input id="admin-seo-title" type="text" placeholder="SEO Title (auto-filled by AI)">
         <textarea id="admin-meta-description" placeholder="Meta Description (auto-filled by AI)" rows="2"></textarea>
-        <textarea id="admin-meta-keywords" placeholder="Meta Keywords — comma separated (auto-filled by AI)" rows="2"></textarea>
+        <textarea id="admin-meta-keywords" placeholder="Meta Keywords â€” comma separated (auto-filled by AI)" rows="2"></textarea>
 
         <div class="form-action-row">
           <button id="admin-submit" class="primary-btn" type="submit">Add Product</button>
@@ -224,7 +224,7 @@
       </form>
     </section>
 
-    <!-- ── Draft Products ── -->
+    <!-- â”€â”€ Draft Products â”€â”€ -->
     <section class="detail-card admin-panel-card admin-products-panel" id="drafts-panel">
       <div class="section-title-row">
         <div>
@@ -235,7 +235,7 @@
       <div id="admin-drafts" class="list-block"></div>
     </section>
 
-    <!-- ── Published Products ── -->
+    <!-- â”€â”€ Published Products â”€â”€ -->
     <section class="detail-card admin-panel-card admin-products-panel">
       <div class="section-title-row">
         <div>
@@ -246,7 +246,7 @@
       <div id="admin-products" class="list-block"></div>
     </section>
 
-    <!-- ── Orders ── -->
+    <!-- â”€â”€ Orders â”€â”€ -->
     <section class="detail-card admin-panel-card admin-orders-panel">
       <div class="section-title-row">
         <div>
@@ -295,3 +295,4 @@
   <script src="script.js?v=4"></script>
 </body>
 </html>
+
