@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const crypto = require("crypto");
+const path = require("path");
 
 const { generateProductContent, generateAnalyticsSummary, generateAnalyticsRecommendations } = require("./ai-content-generator.js");
 
@@ -324,12 +325,24 @@ app.get("/trending-products", async (req, res) => {
   } catch { res.status(500).json({ message: "Failed to load trending products" }); }
 });
 
-app.get("/product/:id", async (req, res) => {
+app.get("/api/product/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: "Product not found" });
     res.json(product);
   } catch { res.status(400).json({ message: "Invalid product id" }); }
+});
+
+app.get("/api/products/slug/:slug", async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug });
+    if (!product) return res.status(404).json({ message: "Product not found" });
+    res.json(product);
+  } catch { res.status(400).json({ message: "Invalid product slug" }); }
+});
+
+app.get("/product/:slug", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "product.html"));
 });
 
 // â”€â”€ Add product (with stock + category + price history) â”€â”€
