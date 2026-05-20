@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - IT Accessories Marketplace</title>
+  <link rel="stylesheet" href="style.css?v=5">
+  <style>
+    /* ── AI Generate Button ── */
+    .ai-generate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      margin-bottom: 4px;
+    }
+    .ai-generate-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .ai-generate-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+    .ai-generate-btn .btn-icon { font-size: 1.1rem; }
+    .ai-generate-btn .btn-spinner {
+      width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── AI hint row ── */
+    .ai-hint-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(99,102,241,0.08);
+      border: 1px solid rgba(99,102,241,0.2);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 0.82rem;
+      color: #6366f1;
+    }
+    .ai-hint-row .ai-icon { font-size: 1.3rem; }
+
+    /* ── Draft/Publish action row ── */
+    .form-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 6px;
+    }
+    .draft-btn {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .draft-btn:hover { background: #e5e7eb; }
+
+    /* ── Status pill for drafts ── */
+    .pill-draft {
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .pill-published {
+      background: #d1fae5;
+      color: #065f46;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .publish-inline-btn {
+      background: #10b981;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .publish-inline-btn:hover { opacity: 0.85; }
+
+    /* ── Analytics nav highlight ── */
+    .analytics-nav-link {
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      color: #fff !important;
+      border-radius: 6px;
+      padding: 4px 12px !important;
+      font-weight: 700 !important;
+    }
+    .analytics-nav-link:hover { opacity: 0.88; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <h2>IT Accessories Market</h2>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="wishlist.html">Wishlist</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="orders.html">Orders</a></li>
+        <li><a href="ai-analytics.html" class="analytics-nav-link">✨ AI Analytics</a></li>
+        <li id="auth-nav-link"><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-wrap admin-shell">
+    <section class="dashboard-banner">
+      <div class="dashboard-copy">
+        <div class="auth-badge">Admin Console</div>
+        <h1>Manage products, SEO, and orders in one place</h1>
+        <p class="muted-text">A cleaner control center for your catalog, metadata, and fulfillment tasks.</p>
+        <div class="admin-shortcuts">
+          <span>Catalog</span>
+          <span>SEO</span>
+          <span>Order flow</span>
+          <span>AI Content</span>
+        </div>
+      </div>
+      <div class="dashboard-metrics">
+        <div class="metric-card">
+          <strong>Catalog</strong>
+          <span>Products + images</span>
+        </div>
+        <div class="metric-card">
+          <strong>Orders</strong>
+          <span>Status updates</span>
+        </div>
+        <div class="metric-card">
+          <strong>AI Content</strong>
+          <span>Auto-generate SEO</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Add / Edit Product Form ── -->
+    <section class="detail-card admin-panel-card admin-form-panel">
+      <div class="section-title-row">
+        <div>
+          <h3 id="admin-form-title">Add Product</h3>
+          <p class="muted-text">Fill in Name and Description, then hit <strong>✨ Generate AI Content</strong> to auto-fill the rest.</p>
+        </div>
+      </div>
+
+      <!-- AI hint -->
+      <div class="ai-hint-row">
+        <span class="ai-icon">✨</span>
+        <span>Type the <strong>Product Name</strong> and a short <strong>Description</strong>, then click Generate AI Content — SEO title, meta tags, and keywords will be filled automatically.</span>
+      </div>
+
+      <form id="admin-add-form" class="admin-form admin-form-grid">
+        <input id="admin-id" type="hidden">
+
+        <input id="admin-name" type="text" placeholder="Product Name *" required>
+        <input id="admin-price" type="number" min="1" step="0.01" placeholder="Price *" required>
+        <input id="admin-image" type="text" placeholder="Image Path (e.g. images/mouse.jpg)" required>
+
+        <textarea id="admin-description" placeholder="Description — briefly describe what this product is and who it's for *" rows="3"></textarea>
+
+        <!-- ── NEW: Inventory & Category Fields ── -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <select id="admin-category" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem">
+            <option value="">Category</option>
+            <option value="Keyboards">Keyboards</option>
+            <option value="Mice">Mice</option>
+            <option value="Headphones">Headphones</option>
+            <option value="Webcams">Webcams</option>
+            <option value="Hubs">Hubs</option>
+            <option value="Mousepads">Mousepads</option>
+            <option value="Monitors">Monitors</option>
+            <option value="Stands">Stands</option>
+            <option value="Cables">Cables</option>
+            <option value="Lighting">Lighting</option>
+            <option value="IT Accessories">Other</option>
+          </select>
+          <input id="admin-stock" type="number" min="0" placeholder="Stock Quantity" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem">
+          <input id="admin-low-stock" type="number" min="1" placeholder="Low Stock Alert (e.g. 5)" style="padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.9rem">
+        </div>
+
+        <!-- AI Generate Button -->
+        <button type="button" class="ai-generate-btn" id="ai-generate-btn">
+          <span class="btn-icon">✨</span>
+          <span id="ai-btn-label">Generate AI Content</span>
+        </button>
+
+        <input id="admin-seo-title" type="text" placeholder="SEO Title (auto-filled by AI)">
+        <textarea id="admin-meta-description" placeholder="Meta Description (auto-filled by AI)" rows="2"></textarea>
+        <textarea id="admin-meta-keywords" placeholder="Meta Keywords — comma separated (auto-filled by AI)" rows="2"></textarea>
+
+        <div class="form-action-row">
+          <button id="admin-submit" class="primary-btn" type="submit">Add Product</button>
+          <button id="admin-save-draft-btn" class="draft-btn" type="button">Save as Draft</button>
+          <button id="admin-cancel-edit" class="secondary-btn" type="button">Cancel Edit</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ── Draft Products ── -->
+    <section class="detail-card admin-panel-card admin-products-panel" id="drafts-panel">
+      <div class="section-title-row">
+        <div>
+          <h3>Draft Products</h3>
+          <p class="muted-text">Products saved as drafts. Publish when ready to show on the store.</p>
+        </div>
+      </div>
+      <div id="admin-drafts" class="list-block"></div>
+    </section>
+
+    <!-- ── Published Products ── -->
+    <section class="detail-card admin-panel-card admin-products-panel">
+      <div class="section-title-row">
+        <div>
+          <h3>Published Products</h3>
+          <p class="muted-text">Edit, delete, or review SEO details for each item.</p>
+        </div>
+      </div>
+      <div id="admin-products" class="list-block"></div>
+    </section>
+
+    <!-- ── Orders ── -->
+    <section class="detail-card admin-panel-card admin-orders-panel">
+      <div class="section-title-row">
+        <div>
+          <h3>Order Management</h3>
+          <p class="muted-text">Update fulfillment status from Processing to Delivered.</p>
+        </div>
+      </div>
+      <div id="admin-orders-list" class="list-block"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div>
+        <h4>IT Accessories Market</h4>
+        <p>Your trusted store for quality IT accessories, gaming gear, and productivity devices.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="products.html">All Products</a></li>
+          <li><a href="wishlist.html">Wishlist</a></li>
+          <li><a href="cart.html">Cart</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Account</h4>
+        <ul>
+          <li><a href="login.html">Login</a></li>
+          <li><a href="register.html">Register</a></li>
+          <li><a href="orders.html">My Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: support@itmarket.local</li>
+          <li>Phone: +92 300 0000000</li>
+          <li>Hours: Mon - Sat, 9:00 AM - 8:00 PM</li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer-bottom">&copy; 2026 IT Accessories Marketplace. All rights reserved.</div>
+  </footer>
+
+  <script src="script.js?v=4"></script>
+</body>
+</html>
