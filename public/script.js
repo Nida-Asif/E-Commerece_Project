@@ -180,12 +180,13 @@ function setWishlist(wishlist) {
   setScopedList("wishlist", wishlist);
 }
 
-function viewProduct(id) {
-  trackProductInteraction(id, "view");
+function viewProduct(identifier, slug = "") {
+  const target = slug || identifier;
+  trackProductInteraction(identifier, "view");
   const viewed = getScopedList("viewedProducts");
-  viewed.unshift(String(id));
+  viewed.unshift(String(identifier));
   setScopedList("viewedProducts", [...new Set(viewed)].slice(0, 50));
-  window.location = `product.html?id=${id}`;
+  window.location = `product.html?slug=${encodeURIComponent(target)}`;
 }
 
 function addCart(id, name, price, image) {
@@ -240,7 +241,7 @@ function renderProductCards(products) {
         <h3>${escapeHtml(product.name)}</h3>
         <h4>$${Number(product.price).toFixed(2)}</h4>
         <p>${escapeHtml(product.description || "")}</p>
-        <button onclick='viewProduct(${jsonArg(product._id)})'>View Details</button>
+        <button onclick='viewProduct(${jsonArg(product._id)}, ${jsonArg(product.slug || "")})'>View Details</button>
         <button onclick='addCart(${jsonArg(product._id)}, ${jsonArg(product.name)}, ${Number(product.price)}, ${jsonArg(product.image || "")})'>Add to Cart</button>
         <button onclick='addWishlist(${jsonArg(product._id)}, ${jsonArg(product.name)}, ${Number(product.price)}, ${jsonArg(product.image || "")})'>Wishlist</button>
       </div>
@@ -283,16 +284,23 @@ async function initProductDetails() {
   }
 
   const params = new URLSearchParams(window.location.search);
-  const id = params.get("id");
+  const pathSlug = window.location.pathname.includes("/product/") ? window.location.pathname.split("/").filter(Boolean).pop() : "";
+  const slug = params.get("slug") || pathSlug || params.get("id");
 
-  if (!id) {
-    detailBox.innerHTML = "<p>Invalid product ID.</p>";
+  if (!slug) {
+    detailBox.innerHTML = "<p>Invalid product URL.</p>";
     return;
   }
 
   try {
-    const response = await fetch(`${API_BASE}/product/${id}`);
-    const product = await response.json();
+    let response = await fetch(`${API_BASE}/api/products/slug/${encodeURIComponent(slug)}`);
+    let product = await response.json();
+
+    if (!response.ok && /^[a-fA-F0-9]{24}$/.test(slug)) {
+      response = await fetch(`${API_BASE}/product/${slug}`);
+      product = await response.json();
+    }
+
 
     if (!response.ok) {
       detailBox.innerHTML = `<p>${escapeHtml(product.message || "Product not found")}</p>`;
@@ -323,7 +331,8 @@ async function initProductDetails() {
       wishlistButton.onclick = () => addWishlist(product._id, product.name, product.price, product.image);
     }
   } catch (error) {
-    detailBox.innerHTML = "<p>Could not load product details.</p>";
+    console.error("initProductDetails failed:", error);
+    detailBox.innerHTML = `<p>Could not load product details. ${escapeHtml(error?.message || String(error))}</p>`;
   }
 }
 
@@ -635,7 +644,7 @@ function fillAdminForm(product) {
 
 async function editAdminProduct(id) {
   try {
-    const response = await fetch(`${API_BASE}/product/${id}`, { headers: authHeaders() });
+    const response = await fetch(`${API_BASE}/api/product/${id}`, { headers: authHeaders() });
     const product = await response.json();
 
     if (!response.ok) {
@@ -1411,7 +1420,7 @@ async function handleChatbotQuery(rawText) {
       return `I could not match that product. Try: add <exact product name> to cart. Examples: ${examples}`;
     }
     addCart(match._id, match.name, match.price, match.image);
-    return `Added ${match.name} to cart. Open: product.html?id=${match._id}`;
+    return `Added ${match.name} to cart. Open: product.html?slug=${match.slug || match._id}`;
   }
 
   if (lower.includes("recommend") || lower.includes("also bought") || lower.includes("trending")) {
